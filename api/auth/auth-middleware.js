@@ -7,7 +7,8 @@
   }
 */
 function restricted() {
-next()
+  return console.log('restricted middleware');
+
 
 }
 

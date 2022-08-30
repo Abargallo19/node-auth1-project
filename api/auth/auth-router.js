@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const Users = require('../users/users-model');
-
+const {
+  checkUsernameExists,
+  checkUsernameFree,
+  checkPasswordLength,
+} = require('./auth-middleware');
 
 
 // Require `checkUsernameFree`, `checkUsernameExists` and `checkPasswordLength`
@@ -31,7 +35,7 @@ const Users = require('../users/users-model');
     "message": "Password must be longer than 3 chars"
   }
  */
-router.post('/register', (req, res, next) => {
+router.post('/register', checkPasswordLength, checkUsernameFree, (req, res, next) => {
   res.json("register")
 })
 
@@ -50,7 +54,7 @@ router.post('/register', (req, res, next) => {
     "message": "Invalid credentials"
   }
  */
-router.post('/login', (req, res, next) => {
+router.post('/login', checkUsernameExists, (req, res, next) => {
   res.json("login")
 })
 
@@ -69,7 +73,7 @@ router.post('/login', (req, res, next) => {
     "message": "no session"
   }
  */
-router.get('/logout', (req, res, next) => {
+router.get('/logout', checkUsernameExists, (req, res, next) => {
   res.json('logout')
 })
  

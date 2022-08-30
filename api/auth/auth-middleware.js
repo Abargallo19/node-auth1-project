@@ -6,8 +6,18 @@
     "message": "You shall not pass!"
   }
 */
-function restricted() {
-  return console.log('restricted middleware');
+function restricted(req, res, next) {
+try {
+  if(!req.session.user) {
+    res.status(401).json({message: "You shall not pass!"})
+  }
+} catch (error) {
+  
+}
+
+
+  console.log('restricted middleware');
+
 
 
 }
@@ -25,7 +35,9 @@ function restricted() {
     "message": "Username taken"
   }
 */
-function checkUsernameFree() {
+function checkUsernameFree(req, res, next) {
+
+
 
 }
 
@@ -58,5 +70,5 @@ module.exports = {
   restricted, 
   checkUsernameExists,
   checkUsernameFree,
-  checkPasswordLength
+  checkPasswordLength,
 }

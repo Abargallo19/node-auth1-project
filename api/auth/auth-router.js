@@ -35,7 +35,19 @@ const {
     "message": "Password must be longer than 3 chars"
   }
  */
-router.post('/register', checkPasswordLength, checkUsernameFree, (req, res, next) => {
+router.post('/register', checkPasswordLength, checkUsernameFree, async (req, res, next) => {
+  try {
+    const { user_id, username, password } = req.body;
+    const hash = bcrypt.hashSync(password, 8);
+    const user = { username, password: hash };
+    await Users.add(user);
+    res.status(200).json({ user_id, username })
+
+
+  } catch (error) {
+next(error)
+  }
+
   res.json("register")
 })
 
@@ -55,6 +67,20 @@ router.post('/register', checkPasswordLength, checkUsernameFree, (req, res, next
   }
  */
 router.post('/login', checkUsernameExists, (req, res, next) => {
+try {
+  const { username, password } = req.body;
+  const user = await Users.findBy({ username }).first();
+if(user === null) {
+  next({status: 401, message: 'Invalid credentials'});
+  return;
+}
+
+} catch (error) {
+  
+}
+
+
+
   res.json("login")
 })
 
@@ -76,6 +102,6 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
 router.get('/logout', checkUsernameExists, (req, res, next) => {
   res.json('logout')
 })
- 
+
 // Don't forget to add the router to the `exports` object so it can be required in other modules
 module.exports = router;

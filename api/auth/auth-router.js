@@ -45,7 +45,7 @@ router.post('/register', checkPasswordLength, checkUsernameFree, async (req, res
 
 
   } catch (error) {
-next(error)
+    next(error)
   }
 
   res.json("register")
@@ -66,18 +66,20 @@ next(error)
     "message": "Invalid credentials"
   }
  */
-router.post('/login', checkUsernameExists, (req, res, next) => {
-try {
-  const { username, password } = req.body;
-  const user = await Users.findBy({ username }).first();
-if(user === null) {
-  next({status: 401, message: 'Invalid credentials'});
-  return;
-}
+router.post('/login', checkUsernameExists, async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    const user = await Users.findBy({ username }).first();
+    if (user === null) {
+      next({ status: 401, message: 'Invalid credentials' });
+      return;
+    }
 
-} catch (error) {
-  
-}
+
+
+  } catch (error) {
+
+  }
 
 
 
